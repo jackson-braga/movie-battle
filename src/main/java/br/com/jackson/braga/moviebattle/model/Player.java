@@ -1,6 +1,5 @@
 package br.com.jackson.braga.moviebattle.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Player {
@@ -21,6 +22,7 @@ public class Player {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@JsonIgnore
 	private User user;
 
 	public long getId() {

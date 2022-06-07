@@ -21,12 +21,22 @@ public class PlayerWarmUp {
 	@EventListener
 	public void warmUp(ApplicationReadyEvent event) {
 		var user = new User();
-		user.setUsername("jack");
+		user.setUsername("player1");
 		user.setPassword("123");
 		user = userService.upsert(user);
 		
 		var player = new Player();
-		player.setName("Jackson");
+		player.setName("Player 1");
+		player.setUser(user);
+		playerService.upsert(player);
+		
+		user = new User();
+		user.setUsername("player2");
+		user.setPassword("123");
+		user = userService.upsert(user);
+		
+		player = new Player();
+		player.setName("Player 2");
 		player.setUser(user);
 		playerService.upsert(player);
 	}

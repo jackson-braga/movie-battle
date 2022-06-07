@@ -3,7 +3,10 @@ package br.com.jackson.braga.moviebattle.security;
 import java.util.Date;
 import java.util.function.Function;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -63,5 +66,13 @@ public class JwtTokenUtil {
 				.setExpiration(validity)
 				.signWith(SignatureAlgorithm.HS512, secretKey)
 				.compact();
+	}
+
+	public String getToken(HttpServletRequest request) {
+		var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.substring(7);
+		}
+		return null;
 	}
 }

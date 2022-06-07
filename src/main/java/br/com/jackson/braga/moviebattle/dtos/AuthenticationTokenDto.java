@@ -1,10 +1,10 @@
 package br.com.jackson.braga.moviebattle.dtos;
 
-public class AuthTokenDto {
+public class AuthenticationTokenDto {
 
 	private final String token;
 
-	public AuthTokenDto(String token) {
+	public AuthenticationTokenDto(String token) {
 		this.token = token;
 	}
 

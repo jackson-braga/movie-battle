@@ -1,14 +1,14 @@
 package br.com.jackson.braga.moviebattle.dtos;
 
-public class AuthDto {
+public class AuthenticationDto {
 
 	private String username;
 	private String password;
 
-	public AuthDto() {
+	public AuthenticationDto() {
 	}
 
-	public AuthDto(String username, String password) {
+	public AuthenticationDto(String username, String password) {
 		this.username = username;
 		this.password = password;
 	}

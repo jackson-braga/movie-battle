@@ -37,7 +37,7 @@ public class RoundService {
 
 	public Optional<Round> findCurrentRound(Battle battle) {
 		validateBattle(battle);
-		return roundRepository.findByBattleAndStatus(battle, RoundStatus.CURRENT);
+		return roundRepository.findByBattleAndStatus(battle, RoundStatus.CURRENT).stream().findFirst();
 	}
 
 	public Round createRound(Battle battle) {

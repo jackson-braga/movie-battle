@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.jackson.braga.moviebattle.dtos.AnswerTdo;
 import br.com.jackson.braga.moviebattle.exceptions.NotFoundModelException;
 import br.com.jackson.braga.moviebattle.model.Battle;
 import br.com.jackson.braga.moviebattle.model.Movie;
@@ -45,21 +46,27 @@ public class BattleController {
 	}
 	
 	@PutMapping("/{batter_id}/round/{round_id}/answer")
-	public Round answer(
+	public AnswerTdo answer(
 			@PathVariable("batter_id") Long batterId, 
 			@PathVariable("round_id") Long roundId,
 			@RequestBody Movie chosen
 			) {
 		var battle = battleService.findById(batterId).orElseThrow(this::battleNotFoundException);
 
-		var answer = roundService.findRound(battle, roundId).map(round -> roundService.answer(round, chosen))
+		var round = roundService.findRound(battle, roundId).map(r -> roundService.answer(r, chosen))
 				.orElseThrow(() -> new NotFoundModelException("Round não encontrado"));
 
+		var answer = new AnswerTdo();
+		answer.setChoice(round.getChoice());
+		answer.setStatus(round.getStatus());
+		
 		if (!battleService.isGameOver(battle)) {
 			battleService.end(battle);
 		} else {
-			return roundService.createRound(battle);
+			var nextRound = roundService.createRound(battle);
+			answer.setNextRound(nextRound);
 		}
+		
 		return answer;
 	}
 	

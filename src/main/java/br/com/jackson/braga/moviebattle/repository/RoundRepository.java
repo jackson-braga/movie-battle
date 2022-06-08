@@ -13,7 +13,7 @@ public interface RoundRepository extends JpaRepository<Round, Long>{
 
 	List<Round> findByBattle(Battle battle);
 
-	Optional<Round> findByBattleAndStatus(Battle battle, RoundStatus status);
+	List<Round> findByBattleAndStatus(Battle battle, RoundStatus status);
 
 	Optional<Round> findByBattleAndId(Battle battle, Long id);
 	

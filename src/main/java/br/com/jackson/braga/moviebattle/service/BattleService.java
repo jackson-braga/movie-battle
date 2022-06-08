@@ -5,10 +5,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import br.com.jackson.braga.moviebattle.enums.BattleStatus;
 import br.com.jackson.braga.moviebattle.enums.RoundStatus;
+import br.com.jackson.braga.moviebattle.events.BattleStatusEvent;
 import br.com.jackson.braga.moviebattle.exceptions.UnprocessableModelException;
 import br.com.jackson.braga.moviebattle.http.UserSession;
 import br.com.jackson.braga.moviebattle.model.Battle;
@@ -32,6 +34,9 @@ public class BattleService {
 	@Autowired
 	private RoundRepository roundRepository;
 	
+	@Autowired
+	private ApplicationEventPublisher applicationEventPublisher;
+	
 	private Battle create() {
 		var player = getPlayer();
 		log.info("Creating a battle to player {}", player.getName());
@@ -43,10 +48,11 @@ public class BattleService {
 		
 		return battle;
 	}
-	
+
 	public Battle start() {
 		var battle = battleRepository.findByPlayerAndStatus(getPlayer(), BattleStatus.STARTED)
 				.orElseGet(this::create);
+		publisherEvent(battle);
 		return battle;
 	}
 
@@ -59,6 +65,7 @@ public class BattleService {
 		
 		battle.setStatus(BattleStatus.FINISHED);
 		battle = battleRepository.save(battle);
+		publisherEvent(battle);
 		return battle;
 	}
 
@@ -80,5 +87,9 @@ public class BattleService {
 			.count();
 		
 		return count > attemptLimit;
+	}
+	
+	private void publisherEvent(Battle battle) {
+		applicationEventPublisher.publishEvent(new BattleStatusEvent(battle));
 	}
 }

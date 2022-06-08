@@ -1,5 +1,7 @@
 package br.com.jackson.braga.moviebattle.model;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,5 +50,22 @@ public class Player {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Player)) {
+			return false;
+		}
+		Player other = (Player) obj;
+		return id == other.id;
+	}
+
 }

@@ -1,5 +1,7 @@
 package br.com.jackson.braga.moviebattle.model;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,12 +24,6 @@ public class Battle {
 	private Player player;
 	
 	@Column(nullable = false)
-	private int attmpt;
-	
-	@Column(nullable = false)
-	private long score;
-	
-	@Column(nullable = false)
 	private BattleStatus status;
 
 	public long getId() {
@@ -46,28 +42,29 @@ public class Battle {
 		this.player = player;
 	}
 
-	public int getAttmpt() {
-		return attmpt;
-	}
-
-	public void setAttmpt(int attmpt) {
-		this.attmpt = attmpt;
-	}
-
-	public long getScore() {
-		return score;
-	}
-
-	public void setScore(long score) {
-		this.score = score;
-	}
-
 	public BattleStatus getStatus() {
 		return status;
 	}
 
 	public void setStatus(BattleStatus status) {
 		this.status = status;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Battle)) {
+			return false;
+		}
+		Battle other = (Battle) obj;
+		return id == other.id;
 	}
 
 }

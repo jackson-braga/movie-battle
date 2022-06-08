@@ -1,5 +1,7 @@
 package br.com.jackson.braga.moviebattle.model;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,9 +29,77 @@ public class Round {
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
-	private Movie secund;
+	private Movie second;
+	
+	@ManyToOne
+	private Movie choice;
 	
 	@Column(nullable = false)
 	private RoundStatus status;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Battle getBattle() {
+		return battle;
+	}
+
+	public void setBattle(Battle battle) {
+		this.battle = battle;
+	}
+
+	public Movie getFirst() {
+		return first;
+	}
+
+	public void setFirst(Movie first) {
+		this.first = first;
+	}
+
+	public Movie getSecond() {
+		return second;
+	}
+
+	public void setSecond(Movie second) {
+		this.second = second;
+	}
+
+	public Movie getChoice() {
+		return choice;
+	}
+	
+	public void setChoice(Movie choice) {
+		this.choice = choice;
+	}
+	
+	public RoundStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(RoundStatus status) {
+		this.status = status;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Round)) {
+			return false;
+		}
+		Round other = (Round) obj;
+		return id == other.id;
+	}
 
 }

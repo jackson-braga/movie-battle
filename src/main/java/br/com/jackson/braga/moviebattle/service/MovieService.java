@@ -20,4 +20,8 @@ public class MovieService {
 		
 		return repository.save(movie);
 	}
+	
+	public void findAll() {
+		repository.findAll();
+	}
 }

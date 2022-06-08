@@ -63,30 +63,6 @@ public class User implements UserDetails {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(this.id, this.username);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-
-		if (obj == null)
-			return false;
-
-		if (!(obj instanceof User))
-			return false;
-
-		User other = (User) obj;
-
-		if (id != other.id)
-			return false;
-
-		return true;
-	}
-
-	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.emptyList();
 	}
@@ -109,6 +85,23 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof User)) {
+			return false;
+		}
+		User other = (User) obj;
+		return id == other.id;
 	}
 
 }

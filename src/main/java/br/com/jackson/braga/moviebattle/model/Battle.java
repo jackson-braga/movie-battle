@@ -10,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import br.com.jackson.braga.moviebattle.enums.BattleStatus;
 
 @Entity
-public class Battle {
+public class Battle extends RepresentationModel<Battle> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

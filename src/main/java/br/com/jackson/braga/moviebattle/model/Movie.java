@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Movie {
 	
@@ -19,9 +21,11 @@ public class Movie {
 	private String title;
 	
 	@Column(nullable = false)
+	@JsonIgnore
 	private Float rating;
 	
 	@Column(nullable = false)
+	@JsonIgnore
 	private Integer votes;
 
 	public long getId() {

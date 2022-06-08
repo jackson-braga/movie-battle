@@ -71,12 +71,10 @@ public class RoundService {
 	private Pair<Movie, Movie> randomPair(List<Movie> movies) {
 		var size = movies.size();
 
-		var stream = new Random().ints(0, size).distinct().limit(2).sorted().boxed();
+		var numbers = new Random().ints(0, size).distinct().limit(2).sorted().boxed().collect(Collectors.toList());
 
-		var first = stream.collect(Collectors.minBy(Integer::compareTo))
-				.orElseThrow(() -> new NotFoundModelException("Primeiro filme não encontrado"));
-		var second = stream.collect(Collectors.maxBy(Integer::compareTo))
-				.orElseThrow(() -> new NotFoundModelException("Segundo filme não encontrado"));
+		var first = numbers.get(0);
+		var second = numbers.get(1);
 
 		return Pair.of(movies.get(first), movies.get(second));
 	}

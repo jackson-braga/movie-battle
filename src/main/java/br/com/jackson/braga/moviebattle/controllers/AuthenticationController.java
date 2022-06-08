@@ -1,8 +1,12 @@
 package br.com.jackson.braga.moviebattle.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +42,7 @@ public class AuthenticationController {
 				.loadUserByUsername(auth.getUsername());
 		var token = jwtTokenUtil.generateToken(userDetails);
 		
-		return ResponseEntity.ok(new AuthenticationTokenDto(token));
+		return ResponseEntity.ok(configureHateoas(new AuthenticationTokenDto(token)));
 	}
 
 	private void authentication(@NonNull AuthenticationDto auth) {
@@ -49,5 +53,11 @@ public class AuthenticationController {
 		Objects.requireNonNull(password);
 		
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+	}
+	
+	private AuthenticationTokenDto configureHateoas(AuthenticationTokenDto authToken) {
+		authToken.add(linkTo(methodOn(BattleController.class).start()).withRel("start"));
+		authToken.add(linkTo(methodOn(RankingController.class).rankgin()).withRel("raking"));
+		return authToken;
 	}
 }

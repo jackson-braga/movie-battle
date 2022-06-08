@@ -1,10 +1,12 @@
 package br.com.jackson.braga.moviebattle.dtos;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import br.com.jackson.braga.moviebattle.enums.RoundStatus;
 import br.com.jackson.braga.moviebattle.model.Movie;
 import br.com.jackson.braga.moviebattle.model.Round;
 
-public class AnswerTdo {
+public class AnswerTdo extends RepresentationModel<AnswerTdo> {
 
 	private Movie choice;
 	

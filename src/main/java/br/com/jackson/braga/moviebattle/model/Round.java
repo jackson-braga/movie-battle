@@ -10,10 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.jackson.braga.moviebattle.enums.RoundStatus;
 
 @Entity
-public class Round {
+public class Round extends RepresentationModel<Round> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +36,7 @@ public class Round {
 	private Movie second;
 	
 	@ManyToOne
+	@JsonIgnore
 	private Movie choice;
 	
 	@Column(nullable = false)

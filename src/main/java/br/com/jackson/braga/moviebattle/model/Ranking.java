@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Ranking {
 
@@ -25,12 +27,15 @@ public class Ranking {
 	private Double score;
 
 	@Column(nullable = false)
+	@JsonIgnore
 	private long totalBattles;
 	
 	@Column(nullable = false)
+	@JsonIgnore
 	private long totalRounds;
 	
 	@Column(nullable = false)
+	@JsonIgnore
 	private long totalCorrectRounds;
 
 	public Long getId() {

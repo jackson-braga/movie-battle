@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -20,17 +21,21 @@ import br.com.jackson.braga.moviebattle.enums.RoundStatus;
 public class Round extends RepresentationModel<Round> {
 	
 	@Id
+	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Battle battle;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Movie first;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Movie second;
@@ -39,6 +44,7 @@ public class Round extends RepresentationModel<Round> {
 	@JsonIgnore
 	private Movie choice;
 	
+	@NotNull
 	@Column(nullable = false)
 	private RoundStatus status;
 

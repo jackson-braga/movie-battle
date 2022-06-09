@@ -27,6 +27,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		logger.info("URL: " + request.getRequestURL());
 		String token = jwtTokenUtil.getToken(request);
 		
 		String username = null;
@@ -51,3 +52,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 	}
 }
+
+//http://localhost:8080/swagger-ui/index.html
+//http://localhost:8080/swagger-ui/index.css
+//http://localhost:8080/swagger-ui/swagger-initializer.js
+//http://localhost:8080/api-docs/swagger-config

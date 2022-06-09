@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -18,13 +19,16 @@ import br.com.jackson.braga.moviebattle.enums.BattleStatus;
 public class Battle extends RepresentationModel<Battle> {
 
 	@Id
+	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Player player;
 	
+	@NotNull
 	@Column(nullable = false)
 	private BattleStatus status;
 

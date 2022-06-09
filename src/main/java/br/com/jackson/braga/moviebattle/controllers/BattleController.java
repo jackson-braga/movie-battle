@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.jackson.braga.moviebattle.controllers.handler.BattleHateoasHandler;
 import br.com.jackson.braga.moviebattle.dtos.AnswerTdo;
 import br.com.jackson.braga.moviebattle.exceptions.NotFoundModelException;
 import br.com.jackson.braga.moviebattle.model.Battle;
@@ -20,6 +22,11 @@ import br.com.jackson.braga.moviebattle.model.Movie;
 import br.com.jackson.braga.moviebattle.model.Round;
 import br.com.jackson.braga.moviebattle.service.BattleService;
 import br.com.jackson.braga.moviebattle.service.RoundService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/battle")
@@ -30,12 +37,23 @@ public class BattleController {
 	@Autowired
 	private RoundService roundService;
 	
+	@Autowired
+	private BattleHateoasHandler handler;
+	
+	@Operation(summary = "Start a movie battle")
+	@ApiResponses(
+			@ApiResponse(responseCode = "200", description = "Return a new battle or the current battle", 
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = Battle.class))))
 	@PostMapping("/start")
 	public Battle start() {
 		var battle = battleService.start();
-		return configureStartHateoas(battle);
+		return handler.configureStartHateoas(battle);
 	}
 
+	@Operation(summary = "Current round of the battle")
+	@ApiResponses(
+			@ApiResponse(responseCode = "200", description = "Return the current round to choise the better movie", 
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = Round.class))))
 	@GetMapping("/{batter_id}/round")
 	public Round round(@PathVariable("batter_id") Long id) {
 		var battle = battleService.findById(id)
@@ -45,9 +63,17 @@ public class BattleController {
 				.orElseGet(() -> {
 					return roundService.createRound(battle);
 				});
-		return configureHateoas(round);
+		return handler.configureHateoas(round);
 	}
 
+	@Operation(summary = "Current round answer")
+	@ApiResponses(
+			@ApiResponse(responseCode = "200", 
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerTdo.class)),
+					description = "Receive the answer to current round, check if select movie "
+							+ "is the best one or not. Return the status of the answer and the next round.\n"
+							+ "If you fail ${battle.gameover.attempt.limit} rounds, the battle will end." 
+					))
 	@PutMapping("/{batter_id}/round/{round_id}/answer")
 	public AnswerTdo answer(
 			@PathVariable("batter_id") Long batterId, 
@@ -70,59 +96,19 @@ public class BattleController {
 			answer.setNextRound(nextRound);
 		}
 		
-		return configureHateoas(answer);
+		return handler.configureHateoas(answer);
 	}
-
+	
+	@Operation(summary = "End the battle.")
+	@ApiResponses(
+			@ApiResponse(responseCode = "200", description = "End the battle and update the player's ranking", 
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = Battle.class))))
 	@PutMapping("/{batter_id}/end")
 	public Battle end(@PathVariable("batter_id") Long id) {
 		return battleService.findById(id)
 				.map((b) -> battleService.end(b))
-				.map(this::configureEndHateoas)
+				.map(handler::configureEndHateoas)
 				.orElseThrow(this::battleNotFoundException);
-	}
-	
-	private Battle configureStartHateoas(Battle battle) {
-		battle.add(linkToRound(battle, "round"));
-		battle.add(linkToEnd(battle));
-		battle.add(linkToRanking());
-		return battle;
-	}
-	
-	private Round configureHateoas(Round round) {
-		round.add(linkToAnswer(round, round.getFirst(), "first"));
-		round.add(linkToAnswer(round, round.getSecond(), "second"));
-		round.add(linkToEnd(round.getBattle()));
-		round.add(linkToRanking());
-		return round;
-	}
-	
-	private AnswerTdo configureHateoas(AnswerTdo answer) {
-		answer.add(linkToRound(answer.getNextRound().getBattle(), "next_round"));
-		answer.add(linkToEnd(answer.getNextRound().getBattle()));
-		answer.add(linkToRanking());
-		return answer;
-	}
-
-	private Battle configureEndHateoas(Battle battle) {
-		battle.add(linkTo(methodOn(BattleController.class).start()).withRel("start"));
-		battle.add(linkToRanking());
-		return battle;
-	}
-	
-	private Link linkToRound(Battle battle, String rel) {
-		return linkTo(methodOn(BattleController.class).round(battle.getId())).withRel(rel);
-	}
-
-	private Link linkToAnswer(Round round, Movie movie, String rel) {
-		return linkTo(methodOn(BattleController.class).answer(round.getBattle().getId(), round.getId(), movie)).withRel(rel);
-	}
-	
-	private Link linkToEnd(Battle battle) {
-		return linkTo(methodOn(BattleController.class).end(battle.getId())).withRel("end");
-	}
-	
-	private Link linkToRanking() {
-		return linkTo(methodOn(RankingController.class).rankgin()).withRel("ranking");
 	}
 	
 	private NotFoundModelException battleNotFoundException() {

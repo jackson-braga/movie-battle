@@ -72,6 +72,21 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.13.3</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.springdoc</groupId>
+		    <artifactId>springdoc-openapi-ui</artifactId>
+		    <version>1.6.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-hateoas</artifactId>
+			<version>1.6.9</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springdoc</groupId>
+		    <artifactId>springdoc-openapi-data-rest</artifactId>
+		    <version>1.6.9</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -28,8 +28,7 @@ import br.com.jackson.braga.moviebattle.service.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@TestInstance(Lifecycle.PER_CLASS)
-public class BattlerControllerIntegrationTest {
+public class BattleControllerIntegrationTest {
 
 	private static final String USERNAME = "teste";
 	private static final String BASE_URL = "/api/battle";
@@ -70,7 +69,7 @@ public class BattlerControllerIntegrationTest {
 	}
 	
 	@Test
-	public void shouldStartBattleWhenNewBattle() throws JsonProcessingException, Exception {
+	public void shouldReturn200WhenStartNewBattle() throws JsonProcessingException, Exception {
 
 		var battle = new Battle();
 		battle.setId(10);
@@ -90,7 +89,7 @@ public class BattlerControllerIntegrationTest {
 	}
 	
 	@Test
-	public void shouldStartBattleWhenExistesBattle() throws JsonProcessingException, Exception {
+	public void shouldReturn200WhenStartExisteBattle() throws JsonProcessingException, Exception {
 		
 		var newBattle = new Battle();
 		newBattle.setId(10);
@@ -116,30 +115,30 @@ public class BattlerControllerIntegrationTest {
 		.andExpect(MockMvcResultMatchers.jsonPath("$.status", CoreMatchers.is(BattleStatus.STARTED.toString())));
 	}
 	
-//	@Test
-//	public void shouldFindWhenExistesBattle() throws JsonProcessingException, Exception {
-//		
-//		var newBattle = new Battle();
-//		newBattle.setId(10);
-//		newBattle.setPlayer(getUser().getPlayer());
-//		newBattle.setStatus(BattleStatus.STARTED);
-//
-//		var existeBattle = new Battle();
-//		existeBattle.setId(5);
-//		existeBattle.setPlayer(getUser().getPlayer());
-//		existeBattle.setStatus(BattleStatus.STARTED);
-//		
-//		Mockito.when(battleRepository.save(Mockito.any())).thenReturn(newBattle);
-//		
-//		Mockito.when(battleRepository.findByPlayerAndStatus(Mockito.any(), Mockito.any())).thenReturn(Optional.of(existeBattle));
-//		
-//		this.mockMvc
-//		.perform(MockMvcRequestBuilders.post(BASE_URL+"/start")
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-//		.andExpect(MockMvcResultMatchers.status().isOk())
-//		.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
-//		.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(5)))
-//		.andExpect(MockMvcResultMatchers.jsonPath("$.status", CoreMatchers.is(BattleStatus.STARTED.toString())));
-//	}
+	@Test
+	public void shouldReturn200WhenGetNewRound() throws JsonProcessingException, Exception {
+		
+		var newBattle = new Battle();
+		newBattle.setId(10);
+		newBattle.setPlayer(getUser().getPlayer());
+		newBattle.setStatus(BattleStatus.STARTED);
+
+		var existeBattle = new Battle();
+		existeBattle.setId(5);
+		existeBattle.setPlayer(getUser().getPlayer());
+		existeBattle.setStatus(BattleStatus.STARTED);
+		
+		Mockito.when(battleRepository.save(Mockito.any())).thenReturn(newBattle);
+		
+		Mockito.when(battleRepository.findByPlayerAndStatus(Mockito.any(), Mockito.any())).thenReturn(Optional.of(existeBattle));
+		
+		this.mockMvc
+		.perform(MockMvcRequestBuilders.post(BASE_URL+"/start")
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(5)))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.status", CoreMatchers.is(BattleStatus.STARTED.toString())));
+	}
 }

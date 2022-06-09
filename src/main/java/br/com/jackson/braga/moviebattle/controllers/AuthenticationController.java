@@ -54,9 +54,6 @@ public class AuthenticationController {
 		String username = auth.getUsername();
 		String password = auth.getPassword();
 
-		Objects.requireNonNull(username);
-		Objects.requireNonNull(password);
-
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 	}
 

@@ -19,8 +19,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.com.jackson.braga.moviebattle.enums.BattleStatus;
+import br.com.jackson.braga.moviebattle.enums.RoundStatus;
 import br.com.jackson.braga.moviebattle.model.Battle;
 import br.com.jackson.braga.moviebattle.model.Player;
+import br.com.jackson.braga.moviebattle.model.Round;
 import br.com.jackson.braga.moviebattle.model.User;
 import br.com.jackson.braga.moviebattle.repository.BattleRepository;
 import br.com.jackson.braga.moviebattle.security.JwtTokenUtil;
@@ -115,30 +117,33 @@ public class BattleControllerIntegrationTest {
 		.andExpect(MockMvcResultMatchers.jsonPath("$.status", CoreMatchers.is(BattleStatus.STARTED.toString())));
 	}
 	
-	@Test
-	public void shouldReturn200WhenGetNewRound() throws JsonProcessingException, Exception {
-		
-		var newBattle = new Battle();
-		newBattle.setId(10);
-		newBattle.setPlayer(getUser().getPlayer());
-		newBattle.setStatus(BattleStatus.STARTED);
-
-		var existeBattle = new Battle();
-		existeBattle.setId(5);
-		existeBattle.setPlayer(getUser().getPlayer());
-		existeBattle.setStatus(BattleStatus.STARTED);
-		
-		Mockito.when(battleRepository.save(Mockito.any())).thenReturn(newBattle);
-		
-		Mockito.when(battleRepository.findByPlayerAndStatus(Mockito.any(), Mockito.any())).thenReturn(Optional.of(existeBattle));
-		
-		this.mockMvc
-		.perform(MockMvcRequestBuilders.post(BASE_URL+"/start")
-				.contentType(MediaType.APPLICATION_JSON)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.notNullValue()))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(5)))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.status", CoreMatchers.is(BattleStatus.STARTED.toString())));
-	}
+//	@Test
+//	public void shouldReturn200WhenGetNewRound() throws JsonProcessingException, Exception {
+//		
+//		var battle = new Battle();
+//		battle.setId(10);
+//		battle.setPlayer(getUser().getPlayer());
+//		battle.setStatus(BattleStatus.STARTED);
+//		
+//		Mockito.when(battleRepository.findByPlayerAndStatus(Mockito.any(), Mockito.any())).thenReturn(Optional.of(battle));
+//		
+//		var round = new Round();
+//		round.setBattle(battle);
+//		round.setFirst(first);
+//		round.setSecond(second);
+//		round.setStatus(RoundStatus.CURRENT);
+//		round = roundRepository.save(round);
+//		
+//		this.mockMvc
+//		.perform(MockMvcRequestBuilders.post(BASE_URL+"/10/round")
+//				.contentType(MediaType.APPLICATION_JSON)
+//				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+//		.andExpect(MockMvcResultMatchers.status().isOk())
+//		.andExpect(MockMvcResultMatchers.jsonPath("$.battle", CoreMatchers.notNullValue()))
+//		.andExpect(MockMvcResultMatchers.jsonPath("$.first", CoreMatchers.notNullValue()))
+//		.andExpect(MockMvcResultMatchers.jsonPath("$.second", CoreMatchers.notNullValue()))
+////		.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(5)))
+////		.andExpect(MockMvcResultMatchers.jsonPath("$.status", CoreMatchers.is(BattleStatus.STARTED.toString())));
+//		;
+//	}
 }

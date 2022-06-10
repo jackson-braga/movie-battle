@@ -13,7 +13,6 @@ import br.com.jackson.braga.moviebattle.events.BattleStatusEvent;
 import br.com.jackson.braga.moviebattle.model.Battle;
 import br.com.jackson.braga.moviebattle.model.Player;
 import br.com.jackson.braga.moviebattle.model.Ranking;
-import br.com.jackson.braga.moviebattle.repository.BattleRepository;
 import br.com.jackson.braga.moviebattle.repository.RankingRepository;
 import br.com.jackson.braga.moviebattle.repository.RoundRepository;
 

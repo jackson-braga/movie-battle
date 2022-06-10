@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import br.com.jackson.braga.moviebattle.model.Movie;
 import br.com.jackson.braga.moviebattle.model.Player;
 import br.com.jackson.braga.moviebattle.model.Ranking;
 

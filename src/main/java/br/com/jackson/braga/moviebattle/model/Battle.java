@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import br.com.jackson.braga.moviebattle.enums.BattleStatus;
 

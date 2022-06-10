@@ -8,11 +8,6 @@ public class AuthenticationDto {
 	public AuthenticationDto() {
 	}
 
-	public AuthenticationDto(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
-
 	public String getUsername() {
 		return username;
 	}

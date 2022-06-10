@@ -20,12 +20,4 @@ public class OmdbSearch {
 	public void setResultList(List<OmdbMinimalMovie> resultList) {
 		this.resultList = resultList;
 	}
-
-	public Integer getTotalResults() {
-		return totalResults;
-	}
-
-	public void setTotalResults(Integer totalResults) {
-		this.totalResults = totalResults;
-	}
 }

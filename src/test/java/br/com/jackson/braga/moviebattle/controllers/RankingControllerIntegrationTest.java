@@ -1,5 +1,8 @@
 package br.com.jackson.braga.moviebattle.controllers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +20,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import br.com.jackson.braga.moviebattle.model.Player;
+import br.com.jackson.braga.moviebattle.model.Ranking;
 import br.com.jackson.braga.moviebattle.model.User;
+import br.com.jackson.braga.moviebattle.repository.RankingRepository;
 import br.com.jackson.braga.moviebattle.security.JwtTokenUtil;
 import br.com.jackson.braga.moviebattle.service.UserService;
 
@@ -38,6 +44,9 @@ public class RankingControllerIntegrationTest {
 	@MockBean
 	private UserService userService;
 	
+	@MockBean
+	private RankingRepository repository;
+	
 	private String token;
 	
 	@BeforeEach
@@ -50,7 +59,7 @@ public class RankingControllerIntegrationTest {
 	}
 	
 	@Test
-	public void shouldReturnRankingWhenSuccess() throws JsonProcessingException, Exception {
+	public void shouldReturn200WhenRainkingIsEmpty() throws JsonProcessingException, Exception {
 
 		this.mockMvc
 				.perform(MockMvcRequestBuilders.get(BASE_URL)
@@ -59,7 +68,48 @@ public class RankingControllerIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$", CoreMatchers.notNullValue()))
 				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
-				
+	}
+	
+	
+	@Test
+	public void shouldReturn200WhenRainkingIsNotEmpty() throws JsonProcessingException, Exception {
+		var rankings = new ArrayList<Ranking>();
+		
+		var player = new Player();
+		player.setId(1l);
+		player.setName("Teste 1");
+		
+		var ranking = new Ranking();
+		ranking.setId(1L);
+		ranking.setPlayer(player);
+		ranking.setScore(10.2);
+		ranking.setTotalBattles(7);
+		ranking.setTotalRounds(37);
+		ranking.setTotalCorrectRounds(30);
+		rankings.add(ranking);
+		
+		player = new Player();
+		player.setId(2l);
+		player.setName("Teste 2");
+		
+		ranking = new Ranking();
+		ranking.setId(2L);
+		ranking.setPlayer(player);
+		ranking.setScore(123.2);
+		ranking.setTotalBattles(15);
+		ranking.setTotalRounds(75);
+		ranking.setTotalCorrectRounds(59);
+		rankings.add(ranking);
+
+		Mockito.when(repository.findAll()).thenReturn(rankings);
+		
+		this.mockMvc
+		.perform(MockMvcRequestBuilders.get(BASE_URL)
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.jsonPath("$", CoreMatchers.notNullValue()))
+		.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
 	}
 
 	@Test

@@ -23,7 +23,7 @@ public class Round extends RepresentationModel<Round> {
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@NotNull
 	@ManyToOne
@@ -48,11 +48,11 @@ public class Round extends RepresentationModel<Round> {
 	@Column(nullable = false)
 	private RoundStatus status;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

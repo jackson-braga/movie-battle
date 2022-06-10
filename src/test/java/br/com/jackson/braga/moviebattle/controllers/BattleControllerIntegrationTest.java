@@ -79,7 +79,7 @@ public class BattleControllerIntegrationTest {
 		user.setUsername(USERNAME);
 		
 		var player = new Player();
-		player.setId(1);
+		player.setId(1L);
 		player.setName("Teste");
 		player.setUser(user);
 		
@@ -91,7 +91,7 @@ public class BattleControllerIntegrationTest {
 	public void shouldReturn200WhenStartNewBattle() throws JsonProcessingException, Exception {
 
 		var battle = new Battle();
-		battle.setId(10);
+		battle.setId(10L);
 		battle.setPlayer(getUser().getPlayer());
 		battle.setStatus(BattleStatus.STARTED);
 		

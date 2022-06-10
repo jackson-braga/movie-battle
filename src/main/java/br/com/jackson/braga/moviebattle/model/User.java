@@ -21,7 +21,7 @@ public class User implements UserDetails {
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@NotNull
 	@Column(nullable = false)
@@ -33,12 +33,22 @@ public class User implements UserDetails {
 	
 	@OneToOne(mappedBy = "user")
 	private Player player;
+	
+	public User() {
+	}
 
-	public long getId() {
+	public User(Long id, @NotNull String username, @NotNull String password) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

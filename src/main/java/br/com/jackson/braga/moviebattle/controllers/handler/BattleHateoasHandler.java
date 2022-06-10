@@ -31,8 +31,10 @@ public class BattleHateoasHandler {
 	}
 	
 	public AnswerTdo configureHateoas(AnswerTdo answer) {
-		answer.add(linkToRound(answer.getNextRound().getBattle(), "next_round"));
-		answer.add(linkToEnd(answer.getNextRound().getBattle()));
+		if(answer.getNextRound() != null) {
+			answer.add(linkToRound(answer.getNextRound().getBattle(), "next_round"));
+			answer.add(linkToEnd(answer.getNextRound().getBattle()));
+		}
 		answer.add(linkToRanking());
 		return answer;
 	}

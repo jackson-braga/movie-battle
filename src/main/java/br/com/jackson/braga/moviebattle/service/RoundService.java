@@ -1,24 +1,20 @@
 package br.com.jackson.braga.moviebattle.service;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.util.comparator.Comparators;
 
 import br.com.jackson.braga.moviebattle.enums.BattleStatus;
 import br.com.jackson.braga.moviebattle.enums.RoundStatus;
-import br.com.jackson.braga.moviebattle.exceptions.NotFoundModelException;
 import br.com.jackson.braga.moviebattle.exceptions.UnprocessableModelException;
 import br.com.jackson.braga.moviebattle.model.Battle;
 import br.com.jackson.braga.moviebattle.model.Movie;

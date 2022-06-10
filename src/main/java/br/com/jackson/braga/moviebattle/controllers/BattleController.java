@@ -75,14 +75,13 @@ public class BattleController {
 			@PathVariable("round_id") Long roundId,
 			@RequestBody Movie chosen
 			) {
-		var battle = battleService.findById(batterId).orElseThrow(this::battleNotFoundException);
+		var battle = battleService.findById(batterId)
+				.orElseThrow(this::battleNotFoundException);
 
-		var round = roundService.findRound(battle, roundId).map(r -> roundService.answer(r, chosen))
+		var answer = roundService.findRound(battle, roundId)
+				.map(r -> roundService.answer(r, chosen))
+				.map(a -> createAnswer(a))
 				.orElseThrow(() -> new NotFoundModelException("Round não encontrado"));
-
-		var answer = new AnswerTdo();
-		answer.setChoice(round.getChoice());
-		answer.setStatus(round.getStatus());
 		
 		if (battleService.isGameOver(battle)) {
 			battleService.end(battle);
@@ -94,6 +93,13 @@ public class BattleController {
 		return handler.configureHateoas(answer);
 	}
 	
+	private AnswerTdo createAnswer(Round round) {
+		var answer = new AnswerTdo();
+		answer.setChoice(round.getChoice());
+		answer.setStatus(round.getStatus());		// TODO Auto-generated method stub
+		return answer;
+	}
+
 	@Operation(summary = "End the battle.")
 	@ApiResponses(
 			@ApiResponse(responseCode = "200", description = "End the battle and update the player's ranking", 

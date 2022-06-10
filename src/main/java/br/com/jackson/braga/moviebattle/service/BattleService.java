@@ -86,7 +86,7 @@ public class BattleService {
 			.filter(r -> r.getStatus() == RoundStatus.FAILD)
 			.count();
 		
-		return count > attemptLimit;
+		return count >= attemptLimit;
 	}
 	
 	private void publisherEvent(Battle battle) {

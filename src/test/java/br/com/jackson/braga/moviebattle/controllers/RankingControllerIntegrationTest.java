@@ -2,6 +2,7 @@ package br.com.jackson.braga.moviebattle.controllers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
@@ -73,33 +74,7 @@ public class RankingControllerIntegrationTest {
 	
 	@Test
 	public void shouldReturn200WhenRainkingIsNotEmpty() throws JsonProcessingException, Exception {
-		var rankings = new ArrayList<Ranking>();
-		
-		var player = new Player();
-		player.setId(1l);
-		player.setName("Teste 1");
-		
-		var ranking = new Ranking();
-		ranking.setId(1L);
-		ranking.setPlayer(player);
-		ranking.setScore(10.2);
-		ranking.setTotalBattles(7);
-		ranking.setTotalRounds(37);
-		ranking.setTotalCorrectRounds(30);
-		rankings.add(ranking);
-		
-		player = new Player();
-		player.setId(2l);
-		player.setName("Teste 2");
-		
-		ranking = new Ranking();
-		ranking.setId(2L);
-		ranking.setPlayer(player);
-		ranking.setScore(123.2);
-		ranking.setTotalBattles(15);
-		ranking.setTotalRounds(75);
-		ranking.setTotalCorrectRounds(59);
-		rankings.add(ranking);
+		var rankings = getRankingList();
 
 		Mockito.when(repository.findAll()).thenReturn(rankings);
 		
@@ -136,4 +111,31 @@ public class RankingControllerIntegrationTest {
 		
 	}
 	
+	private ArrayList<Ranking> getRankingList() {
+		var rankings = new ArrayList<Ranking>();
+		
+		rankings.add(createRanking(1));
+		rankings.add(createRanking(2));
+		return rankings;
+	}
+
+	private Ranking createRanking(long id) {
+		var random = new Random();
+		
+		var ranking = new Ranking();
+		ranking.setId(id);
+		ranking.setPlayer(createPlayer(id));
+		ranking.setScore(random.nextDouble());
+		ranking.setTotalBattles(random.nextInt());
+		ranking.setTotalRounds(random.nextInt());
+		ranking.setTotalCorrectRounds(random.nextInt());
+		return ranking;
+	}
+
+	private Player createPlayer(Long id) {
+		var player = new Player();
+		player.setId(id);
+		player.setName("Teste "+id);
+		return player;
+	}
 }

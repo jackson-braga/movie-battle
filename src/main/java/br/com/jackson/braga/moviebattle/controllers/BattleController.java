@@ -1,5 +1,7 @@
 package br.com.jackson.braga.moviebattle.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jackson.braga.moviebattle.controllers.handler.BattleHateoasHandler;
-import br.com.jackson.braga.moviebattle.dtos.AnswerTdo;
+import br.com.jackson.braga.moviebattle.dtos.AnswerDto;
 import br.com.jackson.braga.moviebattle.exceptions.NotFoundModelException;
 import br.com.jackson.braga.moviebattle.model.Battle;
 import br.com.jackson.braga.moviebattle.model.Movie;
@@ -26,6 +28,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/battle")
 public class BattleController {
+	private Logger log = LoggerFactory.getLogger(BattleService.class);
+	
 	@Autowired
 	private BattleService battleService;
 	
@@ -64,13 +68,13 @@ public class BattleController {
 	@Operation(summary = "Current round answer")
 	@ApiResponses(
 			@ApiResponse(responseCode = "200", 
-					content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerTdo.class)),
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerDto.class)),
 					description = "Receive the answer to current round, check if select movie "
 							+ "is the best one or not. Return the status of the answer and the next round.\n"
 							+ "If you fail ${battle.gameover.attempt.limit} rounds, the battle will end." 
 					))
 	@PutMapping("/{batter_id}/round/{round_id}/answer")
-	public AnswerTdo answer(
+	public AnswerDto answer(
 			@PathVariable("batter_id") Long batterId, 
 			@PathVariable("round_id") Long roundId,
 			@RequestBody Movie chosen
@@ -93,10 +97,10 @@ public class BattleController {
 		return handler.configureHateoas(answer);
 	}
 	
-	private AnswerTdo createAnswer(Round round) {
-		var answer = new AnswerTdo();
+	private AnswerDto createAnswer(Round round) {
+		var answer = new AnswerDto();
 		answer.setChoice(round.getChoice());
-		answer.setStatus(round.getStatus());		// TODO Auto-generated method stub
+		answer.setStatus(round.getStatus());
 		return answer;
 	}
 

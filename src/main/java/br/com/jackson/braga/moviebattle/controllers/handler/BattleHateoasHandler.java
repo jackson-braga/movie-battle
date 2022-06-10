@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.jackson.braga.moviebattle.controllers.BattleController;
 import br.com.jackson.braga.moviebattle.controllers.RankingController;
-import br.com.jackson.braga.moviebattle.dtos.AnswerTdo;
+import br.com.jackson.braga.moviebattle.dtos.AnswerDto;
 import br.com.jackson.braga.moviebattle.model.Battle;
 import br.com.jackson.braga.moviebattle.model.Movie;
 import br.com.jackson.braga.moviebattle.model.Round;
@@ -30,7 +30,7 @@ public class BattleHateoasHandler {
 		return round;
 	}
 	
-	public AnswerTdo configureHateoas(AnswerTdo answer) {
+	public AnswerDto configureHateoas(AnswerDto answer) {
 		if(answer.getNextRound() != null) {
 			answer.add(linkToRound(answer.getNextRound().getBattle(), "next_round"));
 			answer.add(linkToEnd(answer.getNextRound().getBattle()));

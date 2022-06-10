@@ -2,6 +2,8 @@ package br.com.jackson.braga.moviebattle.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
@@ -18,6 +20,7 @@ import br.com.jackson.braga.moviebattle.repository.RoundRepository;
 
 @Service
 public class RankingService {
+	private Logger log = LoggerFactory.getLogger(BattleService.class);
 	
 	@Value("${ranking.top.limit}")
 	private long topRankingLimit;
@@ -32,19 +35,21 @@ public class RankingService {
 	public void handleBattleStatus(BattleStatusEvent event) {
 		Battle battle = event.getBattle();
 		if(battle.getStatus() == BattleStatus.FINISHED) {
+			log.info("Calculating ranking of de battle...");
 			var ranking = rankingRepository.findByPlayer(battle.getPlayer())
 					.orElseGet(() -> createRanking(battle.getPlayer()));
 
 			var rounds = roundRepository.findByBattle(battle);
 			
 			var sizeRounds = rounds.size();
-			var sizeCurrects = rounds.stream().filter(r -> r.getStatus() == RoundStatus.SUCCESS).count();
+			var sizeCurrects = rounds.stream().filter(r -> r.getStatus() == RoundStatus.CERTAIN).count();
 			
 			ranking.setTotalBattles(ranking.getTotalBattles() + 1);
 			ranking.setTotalRounds(ranking.getTotalRounds() + sizeRounds);
 			ranking.setTotalCorrectRounds(ranking.getTotalCorrectRounds() + sizeCurrects);
 			ranking.setScore(calculateRankingScore(ranking));
 			rankingRepository.save(ranking);
+			log.info("Ranking calculated successfully!");
 		}
 	}
 

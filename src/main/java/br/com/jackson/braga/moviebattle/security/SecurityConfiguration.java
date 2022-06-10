@@ -44,7 +44,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/h2-console").permitAll()
 				.antMatchers("/api-docs*/**").permitAll()
 				.antMatchers("/swagger-ui*/**").permitAll()
-//				.antMatchers("/actuator**").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

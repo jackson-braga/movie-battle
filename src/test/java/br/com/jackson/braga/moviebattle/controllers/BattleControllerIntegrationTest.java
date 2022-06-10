@@ -275,7 +275,7 @@ public class BattleControllerIntegrationTest {
 		
 		var battle = createBattle(idBattle);
 		var round = createRound(1, battle);
-		round.setStatus(RoundStatus.SUCCESS);
+		round.setStatus(RoundStatus.CERTAIN);
 		
 		Mockito.when(battleRepository.findByPlayerAndId(Mockito.any(), Mockito.any())).thenReturn(Optional.of(battle));
 		Mockito.when(roundRepository.findByBattleAndId(Mockito.any(), Mockito.any())).thenReturn(Optional.of(round));
@@ -321,8 +321,8 @@ public class BattleControllerIntegrationTest {
 		var battleFinished = createBattle(idBattle);
 		battleFinished.setStatus(BattleStatus.FINISHED);
 		
-		var roundExist1 = createRound(idRoundExist1, battle, RoundStatus.FAILD);
-		var roundExist2 = createRound(idRoundExist2, battle, RoundStatus.FAILD);
+		var roundExist1 = createRound(idRoundExist1, battle, RoundStatus.WRONG);
+		var roundExist2 = createRound(idRoundExist2, battle, RoundStatus.WRONG);
 		
 		var roundNew = createRound(idRoundNew, battle);
 		roundNew.setChoice(roundNew.getFirst());
@@ -340,7 +340,7 @@ public class BattleControllerIntegrationTest {
 		roundAnswered.setFirst(movieFirst);
 		roundAnswered.setSecond(movieSecond);
 		roundAnswered.setChoice(movieFirst);
-		roundAnswered.setStatus(RoundStatus.FAILD);
+		roundAnswered.setStatus(RoundStatus.WRONG);
 		
 		
 		Mockito.when(battleRepository.findByPlayerAndId(Mockito.any(), Mockito.any())).thenReturn(Optional.of(battle));
@@ -358,7 +358,7 @@ public class BattleControllerIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.choice", CoreMatchers.notNullValue()))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nextRound", CoreMatchers.nullValue()))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(RoundStatus.FAILD.toString())));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(RoundStatus.WRONG.toString())));
 	}
 	
 	@Test
@@ -406,7 +406,7 @@ public class BattleControllerIntegrationTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nextRound.first.id", Matchers.is(Long.valueOf(roundNew.getFirst().getId()).intValue())))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nextRound.second", CoreMatchers.notNullValue()))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nextRound.second.id", Matchers.is(Long.valueOf(roundNew.getSecond().getId()).intValue())))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(RoundStatus.SUCCESS.toString())));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(RoundStatus.CERTAIN.toString())));
 	}
 	
 	private Battle createBattle(long idExistes) {

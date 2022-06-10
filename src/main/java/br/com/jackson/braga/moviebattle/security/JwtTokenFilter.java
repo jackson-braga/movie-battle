@@ -38,6 +38,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		}
 		
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			logger.info("Inicialize authentication..");
 			UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenUtil.getUsername(token));
 
 			if (jwtTokenUtil.validateToken(token, userDetails)) {
@@ -45,6 +46,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 						userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+				logger.info("Authenticated");
 			}
 		}
 		

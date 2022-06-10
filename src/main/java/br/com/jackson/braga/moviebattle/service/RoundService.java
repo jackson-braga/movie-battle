@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import br.com.jackson.braga.moviebattle.repository.RoundRepository;
 
 @Service
 public class RoundService {
-	private Logger log = org.slf4j.LoggerFactory.getLogger(RoundService.class);
+	private Logger log = LoggerFactory.getLogger(RoundService.class);
 
 	@Autowired
 	private RoundRepository roundRepository;
@@ -32,11 +33,20 @@ public class RoundService {
 	private MovieRepository movieRepository;
 
 	public Optional<Round> findCurrentRound(Battle battle) {
+		log.info("Looking for current round...");
 		validateBattle(battle);
-		return roundRepository.findByBattleAndStatus(battle, RoundStatus.CURRENT).stream().findFirst();
+		
+		var round = roundRepository.findByBattleAndStatus(battle, RoundStatus.CURRENT).stream().findFirst();
+		
+		if(round.isEmpty()) {
+			log.info("Round not found");	
+		}
+		
+		return round;
 	}
 
 	public Round createRound(Battle battle) {
+		log.info("Creating new round...");
 		validateBattle(battle);
 
 		var rounds = roundRepository.findByBattle(battle);
@@ -50,17 +60,21 @@ public class RoundService {
 		round.setSecond(pair.getSecond());
 		round.setStatus(RoundStatus.CURRENT);
 		round = roundRepository.save(round);
+		log.info("Round created!");
 		return round;
 	}
 
 	private Pair<Movie, Movie> choicePairMovie(List<Round> rounds, List<Movie> movies) {
+		log.info("Choosing movies pairs");
 		var usedPairs = usedPairs(rounds);
 
 		Pair<Movie, Movie> pair;
 		do {
 			pair = randomPair(movies);
+			log.info("Cheking for duplicate pairs.");
 		} while (usedPairs.contains(createPair(pair.getFirst(), pair.getSecond())));
 
+		log.info("Pair selected.");
 		return pair;
 	}
 
@@ -76,6 +90,7 @@ public class RoundService {
 	}
 
 	private Set<Pair<Long, Long>> usedPairs(List<Round> rounds) {
+		log.info("Loading previous movies pairs!");
 		return rounds.stream().map(round -> {
 			var first = round.getFirst();
 			var second = round.getSecond();
@@ -100,11 +115,20 @@ public class RoundService {
 	}
 
 	public Optional<Round> findRound(Battle battle, Long roundId) {
+		log.info("Looking for round...");
 		validateBattle(battle);
-		return roundRepository.findByBattleAndId(battle, roundId);
+		
+		var round = roundRepository.findByBattleAndId(battle, roundId);
+		
+		if(round.isEmpty()) {
+			log.info("Round not found");	
+		}
+		
+		return round;
 	}
 
 	public Round answer(Round round, Movie chosen) {
+		log.info("Answering the round");
 		if (round.getStatus() != RoundStatus.CURRENT) {
 			throw new UnprocessableModelException("Round já respondida");
 		}
@@ -117,17 +141,19 @@ public class RoundService {
 		
 		round = roundRepository.save(round);
 		
+		log.info("The answer is " + round.getStatus().toString());
 		return round;
 	}
 
 	private RoundStatus answerRound(Round round, Movie chosen) {
+		log.info("Chacking answer...");
 		var scoreFirst = calculateScore(round.getFirst());
 		
 		var scoreSecond = calculateScore(round.getSecond());
 		
 		Movie better = scoreFirst > scoreSecond ? round.getFirst() : round.getSecond();
 
-		return better.equals(chosen) ? RoundStatus.SUCCESS : RoundStatus.FAILD;
+		return better.equals(chosen) ? RoundStatus.CERTAIN : RoundStatus.WRONG;
 	}
 
 	private float calculateScore(Movie movie) {

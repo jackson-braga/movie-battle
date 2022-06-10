@@ -6,7 +6,7 @@ import br.com.jackson.braga.moviebattle.enums.RoundStatus;
 import br.com.jackson.braga.moviebattle.model.Movie;
 import br.com.jackson.braga.moviebattle.model.Round;
 
-public class AnswerTdo extends RepresentationModel<AnswerTdo> {
+public class AnswerDto extends RepresentationModel<AnswerDto> {
 
 	private Movie choice;
 	
